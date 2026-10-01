@@ -1,8 +1,10 @@
 package com.eventos.api.controller;
 
+import com.eventos.api.dto.CertificadoResponse;
 import com.eventos.api.dto.InscricaoResponse;
 import com.eventos.api.dto.UsuarioRequest;
 import com.eventos.api.dto.UsuarioResponse;
+import com.eventos.api.service.CertificadoService;
 import com.eventos.api.service.InscricaoService;
 import com.eventos.api.service.UsuarioService;
 import jakarta.validation.Valid;
@@ -20,6 +22,7 @@ public class UsuarioController {
 
     private final UsuarioService service;
     private final InscricaoService inscricaoService;
+    private final CertificadoService certificadoService;
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@Valid @RequestBody UsuarioRequest req) {
@@ -50,6 +53,11 @@ public class UsuarioController {
     @GetMapping("/{id}/inscricoes")
     public List<InscricaoResponse> listarInscricoes(@PathVariable Long id) {
         return inscricaoService.listarPorUsuario(id);
+    }
+
+    @GetMapping("/{id}/certificados")
+    public List<CertificadoResponse> listarCertificados(@PathVariable Long id) {
+        return certificadoService.listarPorUsuario(id);
     }
 
 }
