@@ -4,8 +4,10 @@ import com.eventos.api.dto.CategoriaRequest;
 import com.eventos.api.dto.CategoriaResponse;
 import com.eventos.api.exception.ConflitoException;
 import com.eventos.api.exception.RecursoNaoEncontradoException;
+import com.eventos.api.exception.RegraDeNegocioException;
 import com.eventos.api.model.Categoria;
 import com.eventos.api.repository.CategoriaRepository;
+import com.eventos.api.repository.EventoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class CategoriaService {
 
     private final CategoriaRepository repository;
+    private final EventoRepository eventoRepository;
 
     public CategoriaResponse criar(CategoriaRequest req) {
 
@@ -50,6 +53,9 @@ public class CategoriaService {
 
     public void excluir(Long id) {
         Categoria categoria = buscarEntidade(id);
+        if (!eventoRepository.findByCategoriaId(id).isEmpty()) {
+            throw new RegraDeNegocioException("Categoria possui eventos vinculados e não pode ser excluída.");
+        }
         repository.delete(categoria);
     }
 
