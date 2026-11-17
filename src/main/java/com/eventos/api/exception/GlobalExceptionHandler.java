@@ -46,6 +46,13 @@ public class GlobalExceptionHandler {
         );
     }
 
+    @ExceptionHandler(CredenciaisInvalidasException.class)
+    public ResponseEntity<ErroResponse> tratarCredenciais(CredenciaisInvalidasException ex, HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                ErroResponse.semCampos(401, "Não autenticado", ex.getMessage(), req.getRequestURI())
+        );
+    }
+
     private CampoErro paraCampoErro(FieldError erro) {
         return new CampoErro(erro.getField(), erro.getDefaultMessage());
     }
